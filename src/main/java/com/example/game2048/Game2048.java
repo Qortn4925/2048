@@ -22,17 +22,33 @@ public class Game2048 {
             }
         }
         score = 0;
-
-
         // 화면 확인용 고정 타일. 완성 단계에서 무작위 타일 생성으로 교체하세요.
         spawnRandomTile();
         spawnRandomTile();
     }
+    //TRUE> 종료, FALSE>계속
+    public boolean isGameOver() {
+        for (int row = 0; row < SIZE; row++) {
+            for (int col = 0; col < SIZE; col++) {
+                int current = board[row][col];
+
+                if (current == 0) return false;
+
+                boolean canMergeRight =
+                        col < SIZE - 1 && current == board[row][col + 1];
+
+                boolean canMergeDown =
+                        row < SIZE - 1 && current == board[row + 1][col];
+
+                if (canMergeRight || canMergeDown) return false;
+            }
+        }
+        return true;
+    }
 
     public void move(Direction direction) {
         Objects.requireNonNull(direction);
-        merge(direction);
-        spawnRandomTile();
+        if(merge(direction)) spawnRandomTile();
         System.out.println("Move requested: " + direction);
     }
     //위치
@@ -68,7 +84,8 @@ public class Game2048 {
     }
 
     // 네 방향 공통 이동·병합
-    private void merge(Direction direction) {
+    private boolean merge(Direction direction) {
+        boolean isChange=false;
         for (int line = 0; line < SIZE; line++) {
             int write = 0;
             int lastMergedIndex = -1;
@@ -86,14 +103,19 @@ public class Game2048 {
 
                     int mergedValue = num * 2;
                     set(line, write - 1, direction, mergedValue);
+                    isChange=true;
                     score += mergedValue;
                     lastMergedIndex = write - 1;
                 } else {
+                    if(position!=write){
+                        isChange=true;
+                    }
                     set(line, write, direction, num);
                     write++;
                 }
             }
         }
+        return isChange;
     }
 
     public int[][] boardSnapshot() {

@@ -63,6 +63,27 @@ public class BoardPanel extends JPanel {
                     }
                 }
             }
+            // 게임판 타일을 전부 그린 다음
+            if (game.isGameOver()) {
+
+                // 반투명 배경
+                g2.setColor(new Color(250, 248, 239, 200));
+                g2.fillRoundRect(originX, originY, size, size, 12, 12);
+
+                // GAME OVER 글자 설정
+                g2.setColor(new Color(119, 110, 101));
+                g2.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 42));
+
+                String message = "GAME OVER!";
+                FontMetrics fm = g2.getFontMetrics();
+
+                // 글자를 게임판 중앙에 배치
+                int x = originX + (size - fm.stringWidth(message)) / 2;
+                int y = originY + (size - fm.getHeight()) / 2
+                        + fm.getAscent();
+
+                g2.drawString(message, x, y);
+            }
         } finally {
             g2.dispose();
         }

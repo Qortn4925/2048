@@ -100,5 +100,8 @@ public class GameWindow extends JFrame {
     private void updateView() {
         scoreLabel.setText("SCORE  " + game.score());
         boardPanel.repaint();
+        if(game.isGameOver()){
+            statusLabel.setText("GAME OVER! R키를 눌러 재시작");
+        }
     }
 }
